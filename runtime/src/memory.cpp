@@ -17,8 +17,11 @@ uint64_t g_kernel_next = kKernelBase;
 
 void reserve(uint64_t addr, uint64_t size, const char* what) {
     if (!plat::reserve(addr, size))
-        fatal("cannot reserve %s at %llx (+%llx): the range is in use", what, (unsigned long long)addr,
-              (unsigned long long)size);
+        fatal("cannot reserve %s at %llx (+%llx): the range is in use"
+#if defined(__APPLE__)
+              " (macOS: another mapping sits in 0x70_0000_0000..0x80_0000_0000; see docs/BUILD.md, \"macOS 26 address space\")"
+#endif
+              , what, (unsigned long long)addr, (unsigned long long)size);
 }
 
 }  // namespace

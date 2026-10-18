@@ -27,13 +27,13 @@ constexpr uint64_t kStackSize = 0x100000000ull;
 constexpr uint64_t kKernelSize = 0x100000000ull;
 constexpr uint64_t kThunkSize = 0x100000ull;
 #if defined(__APPLE__)
-// macOS: only 0x3_0000_0000..0xF_FFFF_FFFF is free below 0x70_0000_0000 (see NX_BASE).
-constexpr uint64_t kHeapBase = 0x400000000ull;
-constexpr uint64_t kAliasBase = 0x600000000ull;
+// macOS 26+: the whole 0x70_0000_0000..0x80_0000_0000 range is used (see NX_BASE). Modules at 0x70_0000_0000..0x70_2000_0000.
+constexpr uint64_t kHeapBase = 0x7100000000ull;
+constexpr uint64_t kAliasBase = 0x7400000000ull;
 constexpr uint64_t kAliasSize = 0x400000000ull;
-constexpr uint64_t kStackBase = 0xA00000000ull;
-constexpr uint64_t kKernelBase = 0xB00000000ull;
-constexpr uint64_t kThunkBase = 0xE00000000ull;
+constexpr uint64_t kStackBase = 0x7800000000ull;
+constexpr uint64_t kKernelBase = 0x7A00000000ull;
+constexpr uint64_t kThunkBase = 0x7C00000000ull;
 #else
 constexpr uint64_t kHeapBase = 0x5000000000ull;
 #if defined(__ANDROID__)

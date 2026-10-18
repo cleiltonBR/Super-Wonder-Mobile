@@ -269,6 +269,12 @@ them. Known graphics problems (black silhouettes on Intel iGPUs, some flicker) a
 
 ## macOS (Apple Silicon)
 
+> **macOS 26 address space.** The guest lives at `0x70_0000_0000..0x80_0000_0000` (`NX_BASE` in `nx/cpu.h`,
+> layout in `nx/runtime.h`); the old macOS 14 layout (`0x3_0000_0000..0xF_FFFF_FFFF`) fails with
+> `cannot reserve heap ... the range is in use`. Check your machine with
+> `clang tools/scan_mac_va.c -o /tmp/scan && /tmp/scan` (16 × `F` expected). `NX_BASE` is only a C++ constant:
+> changing it (`-DCMAKE_CXX_FLAGS=-DNX_BASE=0x...`) needs a rebuild, not a new `recomp` run.
+
 The reference platform. The steps are the ones in the README's "Build and run (macOS, Apple Silicon)" section; this
 page only adds what changed since. The stages are the same as on Linux:
 
