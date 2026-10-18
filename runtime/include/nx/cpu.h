@@ -15,13 +15,14 @@
 #include <intrin.h>
 #endif
 
-// Where the modules are mapped. macOS on Apple silicon keeps 0x10_0000_0000..0x6F_FFFF_FFFF for itself (fixed
-// mappings there fail) and puts the dyld shared cache at 0x1_8000_0000..0x3_0000_0000, so the guest address space
-// moves to 0x3_0000_0000..0xF_FFFF_FFFF there, still inside Horizon's 39 bits. Generated code adds each module's
-// offset to this.
+// Where the modules are mapped. On macOS 14 the guest address space could sit at 0x3_0000_0000..0xF_FFFF_FFFF, but
+// macOS 26 and later refuse (or relocate to 0x70_0000_0000) fixed hints in 0x2_0000_0000..0x40_0000_0000 and scatter
+// system regions (dyld shared cache, ~12 GB blocks) over 0x4_0000_0000..0xD_0000_0000. 0x70_0000_0000..0x80_0000_0000
+// is free there, so macOS uses it (still inside Horizon's 39 bits; layout in runtime.h). Generated code adds each
+// module's offset to this; override with -DNX_BASE=... (C++ rebuild only, no need to re-run the recompiler).
 #ifndef NX_BASE
 #if defined(__APPLE__)
-#define NX_BASE 0x0000000300000000ull
+#define NX_BASE 0x0000007000000000ull
 #else
 #define NX_BASE 0x0000004000000000ull
 #endif
